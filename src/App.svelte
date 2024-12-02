@@ -1,8 +1,24 @@
 <script>
   import Chatbot from "./Chatbot.svelte";
 import Counter from "./lib/Counter.svelte";
+    import MoodWheel from "./MoodWheel.svelte";
+    import image from "./lib/istockphoto-1010001882-612x612.jpg";
 
   let go = false;
+  let showMessage= true;
+  let message = "Welcome! How can I help you?";
+  let showChatBot = false;
+  
+  function chatBot(){
+    showChatBot = !showChatBot;
+  }
+  // Start displaying the message when the component loads
+  import { onMount } from 'svelte';
+  onMount(() => {
+    setTimeout(() => {
+      showMessage = true;
+    }, 200000000000); // Delay in milliseconds (500ms here for a slight delay)
+  });
 // Toggle the menu on smaller screens
 
 
@@ -14,17 +30,10 @@ let moods = [
   { icon: 'fas fa-grin', label: 'Excited',color:'blue' },
 ];
 
+
 function handleClick(mood) {
   alert(`You selected: ${mood.label}`);
 }
-function goClick(){
-  go = true;
-
-}
-function goUnclick(){
-  go = false;
-}
-
 </script>
 <main>
 <nav class="navbar">
@@ -37,18 +46,28 @@ function goUnclick(){
 
   </div>
   </nav>
-{#if go=== false}
+
 <div class="screen1">
   <h1><i>Are you bored?
 
-  </i>&#129300;
+  </i>
 </h1>
   <h2><i>Let’s find something to lift your spirits</i></h2>
-  <button class="goButton" on:click={goClick}>Lets Go</button>
+  
 </div>
+{#if !showChatBot}
+<button class="chatbot-button" on:click={chatBot}>
+
+  <!-- Use the icon -->
+  <img src={image} style="height:40px;"/>
+  </button>
+{#if showMessage}
+  <span class="chatbot-message">{message}</span>
 {/if}
-{#if go === true}
-<div class="screen2">
+{/if}
+
+
+<!-- <div class="screen2">
   <button class="nav-buttons" on:click={goUnclick}><i class="fa-solid fa-arrow-left"></i></button>
   <h2>  Whats your mood?</h2>
   <div class="button-list">
@@ -59,13 +78,13 @@ function goUnclick(){
       </button>
     {/each}
   </div>
-</div>
-{/if}
-<div class="chatbot-icon">
-<i class="fas fa-comments"></i> <!-- Font Awesome chat icon -->
-</div>
+</div> -->
 
-<Chatbot/>
+{#if showChatBot}
+<Chatbot bind:showChatBot={showChatBot}/>
+{/if}
+
+
 </main>
 <style>
 .screen1{
@@ -79,54 +98,16 @@ font-size: 50px;
 text-align:justify;
 text-align: center;
 }
-.screen2{
-left:55%;
-position:relative;
-}
+
 .nav-options{
 font-size: 20px;
 font-weight: bold;
 }
 
-.button-list {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.mood-button {
-  
-  border: none;
-  background-color: #94d2bd;
-  padding: 10px 20px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 50px;
-  
-}
-
-.button:hover {
-  color: #78aa99;
-}
-
-.button i {
-  margin-right: 8px;
-}
 
 
-.goButton{
-  border-radius: 10px;
-  font-size: larger;
-  background-color:#ee9c04;
-  color:white;
-  border-color: #ee9c04;
-  cursor: pointer;
-}
-.goButton:hover{
-  background-color:#ca8506;
-}
+
+
 /* Styling the navigation bar */
 .navbar {
 display: flex;
@@ -136,6 +117,7 @@ background-color:white; /* Dark background color */
 padding: 10px 20px;
 color:black; /* Text color */
 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+height:50px;
 }
 
 /* Styling the navigation options text */
@@ -190,9 +172,49 @@ color:black;
 }
 }
 .nav-right{
-justify-content: right;
+  display: flex;
+  margin-left:70%;
+  gap: 10px;
 }
+.chatbot-button {
+  border-radius: 100%;
+  position: fixed; /* Use fixed for a sticky element relative to the viewport */
+  bottom: 2%;
+  right: 0;
+  /* Optional styling for appearance */
+  padding: 10px 20px;
+  background-color: #020c16;
+  color: white;
+  border: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+.chatbot-message {
+    display: inline-block;
+    background-color: #f8f9fa; /* Light background */
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-size: 1rem;
+    color: #333;
+    opacity: 0; /* Start invisible */
+    transform: translateY(70px); /* Start slightly above */
+    animation: fadeIn 1s forwards; /* Animation definition */
+   position: fixed;
+   bottom:3%;
+   right:7%
+  }
 
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 
 
 

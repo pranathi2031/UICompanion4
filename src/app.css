@@ -11,7 +11,7 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   position: relative; /* For positioning the pseudo-element */
   height: 100%; /* Make sure the body takes the full height */
-  overflow: hidden; /* Prevent any content overflow */
+  overflow: auto; /* Prevent any content overflow */
 }
 
 body::before {
@@ -27,4 +27,9 @@ body::before {
   background-repeat: no-repeat; /* Prevent repetition */
   opacity: 0.8; /* Adjust opacity as needed (0 is fully transparent, 1 is fully opaque) */
   z-index: -1; /* Place behind all other content */
+}
+
+main{
+  height:100%;
+  width:100%;
 }
