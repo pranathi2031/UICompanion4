@@ -1,13 +1,24 @@
 <script>
   import Chatbot from "./Chatbot.svelte";
-import Counter from "./lib/Counter.svelte";
-    import MoodWheel from "./MoodWheel.svelte";
-    import image from "./lib/istockphoto-1010001882-612x612.jpg";
-
+  import Counter from "./lib/Counter.svelte";
+  import MoodWheel from "./MoodWheel.svelte";
+  import image from "./lib/chatbot_01_16_bot_chat_robot_app_artificial_chatbot_dialog-1024.webp";
+  import Signin from "./Signin.svelte";
+  let username = "";
   let go = false;
   let showMessage= true;
   let message = "Welcome! How can I help you?";
   let showChatBot = false;
+  let showModal = false;
+  let isSignedIn = false;
+
+  function openModal() {
+    showModal = true;
+  }
+
+  function closeModal() {
+    showModal = false;
+  }
   
   function chatBot(){
     showChatBot = !showChatBot;
@@ -39,16 +50,24 @@ function handleClick(mood) {
 <nav class="navbar">
  <p class="nav-options"><i class="fas fa-heart"></i>
   Companion</p>
+  
+  {#if isSignedIn}
+  <div class="nav-right1">
+  <button class="nav-button"on:click={() => (isSignedIn = false, username="")}>SignOut</button>
+  <button class="nav-button"><i style="color:white;"class="fas fa-comments"></i></button>
+  </div>
+  {:else}
   <div class="nav-right">
-  <button class="nav-button">Signin</button>
+  <button class="nav-button" on:click={openModal}>Signin</button>
   <button class="nav-button">Register</button>
   <button class="nav-button"><i style="color:white;"class="fas fa-comments"></i></button>
-
   </div>
+  {/if}
+  
   </nav>
 
 <div class="screen1">
-  <h1><i>Are you bored?
+  <h1><i>{username} Are you bored?
 
   </i>
 </h1>
@@ -59,29 +78,20 @@ function handleClick(mood) {
 <button class="chatbot-button" on:click={chatBot}>
 
   <!-- Use the icon -->
-  <img src={image} style="height:40px;"/>
+  <img src={image} style="height:60px; position:fixed; bottom:10px; right:10px;"/>
   </button>
 {#if showMessage}
   <span class="chatbot-message">{message}</span>
 {/if}
 {/if}
 
-
-<!-- <div class="screen2">
-  <button class="nav-buttons" on:click={goUnclick}><i class="fa-solid fa-arrow-left"></i></button>
-  <h2>  Whats your mood?</h2>
-  <div class="button-list">
-    {#each moods as mood (mood.label)}
-      <button class="mood-button" on:click={() => handleClick(mood)}>
-        <i class={mood.icon} style="color:{mood.color}"></i>
-        <br>
-      </button>
-    {/each}
-  </div>
-</div> -->
-
+<MoodWheel/>
 {#if showChatBot}
 <Chatbot bind:showChatBot={showChatBot}/>
+{/if}
+
+{#if showModal}
+<Signin showModal={showModal} closeModal={closeModal} bind:username bind:isSignedIn/>
 {/if}
 
 
@@ -103,11 +113,6 @@ text-align: center;
 font-size: 20px;
 font-weight: bold;
 }
-
-
-
-
-
 /* Styling the navigation bar */
 .navbar {
 display: flex;
@@ -144,7 +149,7 @@ font-weight: bold;
 
 /* Button hover effects */
 .nav-button:hover {
-background-color: grey; /* Darker shade */
+background-color: rgb(69, 63, 63); /* Darker shade */
 transform: scale(1.05); /* Slightly enlarge button */
 }
 
@@ -176,18 +181,30 @@ color:black;
   margin-left:70%;
   gap: 10px;
 }
+.nav-right1{
+  display: flex;
+  margin-left:78%;
+  gap: 10px;
+
+
+}
 .chatbot-button {
-  border-radius: 100%;
+  border-radius: 30px;
   position: fixed; /* Use fixed for a sticky element relative to the viewport */
-  bottom: 2%;
-  right: 0;
+  bottom: 10px;
+  right: 10px;
   /* Optional styling for appearance */
   padding: 10px 20px;
-  background-color: #020c16;
+  background-color:white;
   color: white;
   border: none;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   cursor: pointer;
+  height: 60px;
+  width:60px;
+
+}
+.chatbot-button:hover{
+  background-color: rgb(192, 192, 192);
 }
 .chatbot-message {
     display: inline-block;
@@ -201,8 +218,8 @@ color:black;
     transform: translateY(70px); /* Start slightly above */
     animation: fadeIn 1s forwards; /* Animation definition */
    position: fixed;
-   bottom:3%;
-   right:7%
+   bottom:20px;
+   right:5%
   }
 
   @keyframes fadeIn {

@@ -138,12 +138,18 @@
     border-radius: 0;
     font-weight: bold;
   }
+  .chat-input button:hover{
+   background-color:  rgb(69, 63, 63);
+  }
   .close-button {
     background-color: black;
     color: white;
     border-radius: 5px;
     font-weight: bold;
     font-size: 15px;
+  }
+  .close-button:hover{
+    background-color:  rgb(69, 63, 63);;
   }
   .connecting-screen {
     position: absolute;
@@ -175,4 +181,5 @@
       transform: rotate(360deg);
     }
   }
+  
 </style>
