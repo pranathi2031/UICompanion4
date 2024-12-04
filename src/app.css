@@ -1,8 +1,12 @@
 html {
   height: 100%; /* Ensure full height */
   overflow: hidden; /* Prevent scrollbars */
-  background-color:#94d2bd;
-  background-image: url("https://wallpapercave.com/wp/wp2722601.png"); 
+  background-color:white;
+  
+}
+nav{
+  /* background-image: url("https://wallpapercave.com/wp/wp2722601.png");   */
+  
 
 }
 
@@ -25,7 +29,7 @@ body::before {
   background-size: cover; /* Adjust to fit the image */
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Prevent repetition */
-  opacity: 0.8; /* Adjust opacity as needed (0 is fully transparent, 1 is fully opaque) */
+  opacity: 0.5; /* Adjust opacity as needed (0 is fully transparent, 1 is fully opaque) */
   z-index: -1; /* Place behind all other content */
 }
 

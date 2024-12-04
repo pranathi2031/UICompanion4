@@ -3,6 +3,7 @@
   import Counter from "./lib/Counter.svelte";
   import MoodWheel from "./MoodWheel.svelte";
   import image from "./lib/chatbot_01_16_bot_chat_robot_app_artificial_chatbot_dialog-1024.webp";
+  import moodImage from "./lib/moods.gif";
   import Signin from "./Signin.svelte";
   let username = "";
   let go = false;
@@ -25,6 +26,7 @@
   }
   // Start displaying the message when the component loads
   import { onMount } from 'svelte';
+    import Slide from "./Slide.svelte";
   onMount(() => {
     setTimeout(() => {
       showMessage = true;
@@ -34,11 +36,11 @@
 
 
 let moods = [
-  { icon: 'fas fa-smile', label: 'Happy', color:'yellow' },
-  { icon: 'fas fa-sad-tear', label: 'Sad', color:'grey'},
-  { icon: 'fas fa-angry', label: 'Angry',color:'red' },
-  { icon: 'fas fa-meh', label: 'Meh' ,color:'black'},
-  { icon: 'fas fa-grin', label: 'Excited',color:'blue' },
+  { img:"https://img.freepik.com/premium-vector/happy-young-guy-jumping-different-poses-vector-illustration-cartoon-concept-joyful-laughing-man-with-raised-hands-flat-positive-boy-lifestyle-design-party-sport-dance-happiness-success_311563-406.jpg?w=1380", label: 'Happy', color:'yellow' },
+  // { icon: 'fas fa-sad-tear', label: 'Sad', color:'grey'},
+  // { icon: 'fas fa-angry', label: 'Angry',color:'red' },
+  // { icon: 'fas fa-meh', label: 'Meh' ,color:'black'},
+  // { icon: 'fas fa-grin', label: 'Excited',color:'blue' },
 ];
 
 
@@ -48,44 +50,41 @@ function handleClick(mood) {
 </script>
 <main>
 <nav class="navbar">
- <p class="nav-options"><i class="fas fa-heart"></i>
+ <p class="nav-options"><i style="color:white;" class="fas fa-heart"></i>
   Companion</p>
   
   {#if isSignedIn}
   <div class="nav-right1">
   <button class="nav-button"on:click={() => (isSignedIn = false, username="")}>SignOut</button>
-  <button class="nav-button"><i style="color:white;"class="fas fa-comments"></i></button>
+  <button class="nav-button">Profile</button>
   </div>
   {:else}
   <div class="nav-right">
   <button class="nav-button" on:click={openModal}>Signin</button>
   <button class="nav-button">Register</button>
-  <button class="nav-button"><i style="color:white;"class="fas fa-comments"></i></button>
+  
   </div>
   {/if}
   
   </nav>
 
 <div class="screen1">
-  <h1><i>{username} Are you bored?
-
-  </i>
-</h1>
-  <h2><i>Let’s find something to lift your spirits</i></h2>
-  
+  <img src="https://media1.tenor.com/m/ZjG74RD4xXAAAAAd/mental-health-mental-health-action-day.gif" style="height: 500px; width:600px;"/>
+  <MoodWheel/>
 </div>
+
 {#if !showChatBot}
 <button class="chatbot-button" on:click={chatBot}>
 
   <!-- Use the icon -->
-  <img src={image} style="height:60px; position:fixed; bottom:10px; right:10px;"/>
+  <img src="https://st5.depositphotos.com/4177785/66181/v/450/depositphotos_661813266-stock-illustration-support-chatbot-pixel-perfect-gradient.jpg" style="height:60px; position:fixed; bottom:10px; right:10px;"/>
   </button>
 {#if showMessage}
   <span class="chatbot-message">{message}</span>
 {/if}
 {/if}
 
-<MoodWheel/>
+
 {#if showChatBot}
 <Chatbot bind:showChatBot={showChatBot}/>
 {/if}
@@ -101,6 +100,10 @@ function handleClick(mood) {
   position:relative;
   z-index:10000;
   text-align: center;
+  margin-top:0;
+  width:1528px;
+  height:500px;
+  background-color: #96c2ec;
   
 }
 h1{
@@ -117,10 +120,12 @@ font-weight: bold;
 .navbar {
 display: flex;
 align-items: center;
+background: linear-gradient(90deg, #4A90E2, #032f62);
 
-background-color:white; /* Dark background color */
+
+
 padding: 10px 20px;
-color:black; /* Text color */
+color:white; /* Text color */
 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 height:50px;
 }
@@ -135,8 +140,8 @@ align-items: center;
 
 /* Styling the buttons */
 .nav-button {
-background-color: black; /* Button color */
-color: #fff; /* Button text color */
+background-color: white; /* Button color */
+color: black; /* Button text color */
 border: none;
 border-radius: 5px;
 padding: 8px 12px;
@@ -178,7 +183,7 @@ color:black;
 }
 .nav-right{
   display: flex;
-  margin-left:70%;
+  margin-left:75%;
   gap: 10px;
 }
 .nav-right1{
@@ -195,7 +200,7 @@ color:black;
   right: 10px;
   /* Optional styling for appearance */
   padding: 10px 20px;
-  background-color:white;
+  background-color:#4A90E2;
   color: white;
   border: none;
   cursor: pointer;
@@ -208,7 +213,7 @@ color:black;
 }
 .chatbot-message {
     display: inline-block;
-    background-color: #f8f9fa; /* Light background */
+    background-color: black; /* Light background */
     padding: 10px 20px;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -219,7 +224,9 @@ color:black;
     animation: fadeIn 1s forwards; /* Animation definition */
    position: fixed;
    bottom:20px;
-   right:5%
+   right:5%;
+   color:white;
+   font-weight: bold;
   }
 
   @keyframes fadeIn {
