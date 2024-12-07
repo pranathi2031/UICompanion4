@@ -54,35 +54,37 @@
     userMessage = "";
   }
 </script>
-
-<div class="chatbot-container">
-  <div class="chat-window">
-    <button class="close-button" on:click={() => (showChatBot = false)}>
-      <i class="fas fa-close"></i>
-    </button>
-    {#each chatHistory as chat}
-      <div class={`chat-bubble ${chat.sender}`}>
-        {chat.message}
-      </div>
-    {/each}
-
-    {#if isConnecting}
-      <!-- Show loading message when connecting -->
-      <div class="connecting-screen">
-        <p>Connecting...</p>
-        <div class="spinner"></div>
-      </div>
-    {/if}
+<div class="overlay">
+  <div class="chatbot-container">
+    <div class="chat-window">
+      <button class="close-button" on:click={() => (showChatBot = false)}>
+        <i class="fas fa-close"></i>
+      </button>
+      {#each chatHistory as chat}
+        <div class={`chat-bubble ${chat.sender}`}>
+          {chat.message}
+        </div>
+      {/each}
+  
+      {#if isConnecting}
+        <!-- Show loading message when connecting -->
+        <div class="connecting-screen">
+          <p>Connecting...</p>
+          <div class="spinner"></div>
+        </div>
+      {/if}
+    </div>
+    <div class="chat-input">
+      <input
+        type="text"
+        bind:value={userMessage}
+        placeholder="Type a message..."
+        on:keypress={(e) => e.key === 'Enter' && handleSendMessage()}
+      />
+      <button on:click={handleSendMessage}>Send</button>
+    </div>
   </div>
-  <div class="chat-input">
-    <input
-      type="text"
-      bind:value={userMessage}
-      placeholder="Type a message..."
-      on:keypress={(e) => e.key === 'Enter' && handleSendMessage()}
-    />
-    <button on:click={handleSendMessage}>Send</button>
-  </div>
+  
 </div>
 
 <style>
@@ -97,7 +99,21 @@
     position: fixed;
     right: 10px;
     bottom: 10px;
+    z-index:10000;
   }
+  .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index:1000;
+    }
+  
   .chat-window {
     flex: 1;
     padding: 10px;
@@ -132,21 +148,27 @@
   .chat-input button {
     padding: 10px 20px;
     border: none;
-    background-color: black;
-    color: #fff;
+    background-color: #1e90ff;  
+ 
+    color:white;
     cursor: pointer;
-    border-radius: 0;
+    border-radius: 5px;
     font-weight: bold;
+    border-color: #1e90ff;
+    border-width: 2px;
   }
   .chat-input button:hover{
-   background-color:  rgb(69, 63, 63);
+    background-color: #1e90ff;  
+ 
   }
   .close-button {
-    background-color: black;
-    color: white;
+    background-color: #1e90ff; 
+ 
+    color:white;
     border-radius: 5px;
     font-weight: bold;
     font-size: 15px;
+    border-color:#1e90ff;
   }
   .close-button:hover{
     background-color:  rgb(69, 63, 63);;

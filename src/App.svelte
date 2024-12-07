@@ -3,16 +3,19 @@
   import Counter from "./lib/Counter.svelte";
   import MoodWheel from "./MoodWheel.svelte";
   import image from "./lib/chatbot_01_16_bot_chat_robot_app_artificial_chatbot_dialog-1024.webp";
-  import moodImage from "./lib/moods.gif";
+  import moodImage from "./lib/moods.jpg";
   import Signin from "./Signin.svelte";
   let username = "";
-  let go = false;
   let showMessage= true;
   let message = "Welcome! How can I help you?";
   let showChatBot = false;
   let showModal = false;
-  let isSignedIn = false;
+  let flipped = false;
 
+    // Toggle the flipped state
+    function toggleFlip() {
+        flipped = !flipped;
+    }
   function openModal() {
     showModal = true;
   }
@@ -35,13 +38,6 @@
 // Toggle the menu on smaller screens
 
 
-let moods = [
-  { img:"https://img.freepik.com/premium-vector/happy-young-guy-jumping-different-poses-vector-illustration-cartoon-concept-joyful-laughing-man-with-raised-hands-flat-positive-boy-lifestyle-design-party-sport-dance-happiness-success_311563-406.jpg?w=1380", label: 'Happy', color:'yellow' },
-  // { icon: 'fas fa-sad-tear', label: 'Sad', color:'grey'},
-  // { icon: 'fas fa-angry', label: 'Angry',color:'red' },
-  // { icon: 'fas fa-meh', label: 'Meh' ,color:'black'},
-  // { icon: 'fas fa-grin', label: 'Excited',color:'blue' },
-];
 
 
 function handleClick(mood) {
@@ -52,59 +48,52 @@ function handleClick(mood) {
 <nav class="navbar">
  <p class="nav-options"><i style="color:white;" class="fas fa-heart"></i>
   Companion</p>
-  
-  {#if isSignedIn}
   <div class="nav-right1">
-  <button class="nav-button"on:click={() => (isSignedIn = false, username="")}>SignOut</button>
+    <button class="nav-button" on:click={chatBot}>
+    <i></i>  
+    </button>
+    
   <button class="nav-button">Profile</button>
   </div>
-  {:else}
-  <div class="nav-right">
-  <button class="nav-button" on:click={openModal}>Signin</button>
-  <button class="nav-button">Register</button>
-  
-  </div>
-  {/if}
-  
-  </nav>
+</nav>
 
 <div class="screen1">
-  <img src="https://media1.tenor.com/m/ZjG74RD4xXAAAAAd/mental-health-mental-health-action-day.gif" style="height: 500px; width:600px;"/>
-  <MoodWheel/>
-</div>
-
-{#if !showChatBot}
-<button class="chatbot-button" on:click={chatBot}>
-
-  <!-- Use the icon -->
-  <img src="https://st5.depositphotos.com/4177785/66181/v/450/depositphotos_661813266-stock-illustration-support-chatbot-pixel-perfect-gradient.jpg" style="height:60px; position:fixed; bottom:10px; right:10px;"/>
-  </button>
-{#if showMessage}
-  <span class="chatbot-message">{message}</span>
-{/if}
-{/if}
-
+  <img src="https://images.pexels.com/photos/443446/pexels-photo-443446.jpeg?cs=srgb&dl=daylight-forest-glossy-443446.jpg&fm=jpg" width="100%" height="500px" class="screen1-image"/>
+   <p style="" class="screen1-text">How do you feel today?</p> 
+</div> 
 
 {#if showChatBot}
 <Chatbot bind:showChatBot={showChatBot}/>
 {/if}
-
-{#if showModal}
-<Signin showModal={showModal} closeModal={closeModal} bind:username bind:isSignedIn/>
-{/if}
+<Slide/>
 
 
 </main>
 <style>
 .screen1{
   position:relative;
-  z-index:10000;
+  z-index:1;
   text-align: center;
   margin-top:0;
-  width:1528px;
+  width:100%;
   height:500px;
-  background-color: #96c2ec;
+  background-color:darkgray;
+}
+.screen1-image{
+  z-index:1;
+  opacity: 0.5;
+}
+.screen1-text{
+  font-size:70px; 
+  bottom:380px;
+  position:relative; 
+  color:white; 
+  font-weight:bolder;
+
+}
+.pic-moods{
   
+  position:relative;
 }
 h1{
 font-size: 50px;
@@ -120,14 +109,23 @@ font-weight: bold;
 .navbar {
 display: flex;
 align-items: center;
-background: linear-gradient(90deg, #4A90E2, #032f62);
+
+ /* background: linear-gradient(to right, #00d2ff, #3a7bd5);  */
+
+ background: linear-gradient(to right, hsl(210, 94%, 44%), hsl(184, 99%, 52%),hsl(210, 94%, 44%));  
+ 
+
+
+
+
+
 
 
 
 padding: 10px 20px;
 color:white; /* Text color */
 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-height:50px;
+height:70px;
 }
 
 /* Styling the navigation options text */
@@ -144,12 +142,13 @@ background-color: white; /* Button color */
 color: black; /* Button text color */
 border: none;
 border-radius: 5px;
-padding: 8px 12px;
+padding: 5px 10px;
 margin: 0 5px;
 cursor: pointer;
 font-size: 1rem;
 transition: background-color 0.3s, transform 0.3s;
 font-weight: bold;
+height:40px;
 }
 
 /* Button hover effects */

@@ -1,48 +1,93 @@
 <script>
-  // Define the available moods and a variable for the selected mood.
-  let moods = ['Happy', 'Sad', 'Energetic', 'Motivated', 'Amused', 'Fear', 'Lonely', 'Thrilled'];
   let selectedMood = null;
+  let timeAvailable = null;
+  let locationType = null;
 
-  // Function to handle the mood selection.
-  function selectMood(mood) {
-    selectedMood = mood;
-  }
+  const moods = ['Happy', 'Sad', 'Energetic', 'Lonely'];
+  const times = ['<15 mins', '15-30 mins', '>30 mins'];
+  const locations = ['Home', 'Outdoors', 'Office'];
+
+  const recommendations = {
+    Happy: {
+      home: {
+        short: ['Play a quick game', 'Sing along to your favorite song'],
+        medium: ['Bake something fun', 'Call a friend'],
+        long: ['Watch a feel-good movie', 'Host a virtual party'],
+      },
+      outdoors: {
+        short: ['Take a selfie in the sun', 'Pick some flowers'],
+        medium: ['Go for a nature walk', 'Visit a café'],
+        long: ['Plan a picnic', 'Explore a new park'],
+      },
+      office: {
+        short: ['Tell a joke to a colleague', 'Do some desk stretches'],
+        medium: ['Organize your workspace', 'Plan your weekend'],
+        long: ['Host a team bonding session', 'Start a creative project'],
+      },
+    },
+    // Similar objects for 'Sad', 'Energetic', 'Lonely'
+  };
+
+  let filteredRecommendations = [];
+
+  const generateRecommendations = () => {
+    if (selectedMood && timeAvailable && locationType) {
+      const moodRecs = recommendations[selectedMood.toLowerCase()] || {};
+      const locationRecs = moodRecs[locationType.toLowerCase()] || {};
+      const timeKey = timeAvailable.includes('<15') ? 'short' : timeAvailable.includes('15-30') ? 'medium' : 'long';
+      filteredRecommendations = locationRecs[timeKey] || [];
+    } else {
+      filteredRecommendations = [];
+    }
+  };
 </script>
 
 <style>
-  .mood-board {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin: 20px 0;
-  }
-  .mood {
-    padding: 10px 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  .mood:hover {
-    background-color: #f0f0f0;
-  }
-  .selected {
-    background-color: #0088cc;
-    color: white;
-  }
+  /* Add styles for inputs and recommendation cards */
 </style>
 
-<div class="mood-board">
-  {#each moods as mood (mood)}
-    <div
-      class="mood {selectedMood === mood ? 'selected' : ''}"
-      on:click={() => selectMood(mood)}
-    >
+<h1>Get Recommendations</h1>
+
+<!-- Mood Selector -->
+<div>
+  <h3>Select your mood:</h3>
+  {#each moods as mood}
+    <button on:click={() => { selectedMood = mood; generateRecommendations(); }}>
       {mood}
-    </div>
+    </button>
   {/each}
 </div>
 
-{#if selectedMood}
-  <p>Your selected mood is: <strong>{selectedMood}</strong></p>
+<!-- Time Availability Selector -->
+<div>
+  <h3>How much time do you have?</h3>
+  {#each times as time}
+    <button on:click={() => { timeAvailable = time; generateRecommendations(); }}>
+      {time}
+    </button>
+  {/each}
+</div>
+
+<!-- Location Selector -->
+<div>
+  <h3>Where are you?</h3>
+  {#each locations as location}
+    <button on:click={() => { locationType = location; generateRecommendations(); }}>
+      {location}
+    </button>
+  {/each}
+</div>
+
+<!-- Recommendations -->
+{#if filteredRecommendations.length > 0}
+  <div class="recommendation-card">
+    <h2>Recommended Activities:</h2>
+    <ul>
+      {#each filteredRecommendations as recommendation}
+        <li>{recommendation}</li>
+      {/each}
+    </ul>
+  </div>
+{:else if selectedMood || timeAvailable || locationType}
+  <p>Please select all options to get recommendations.</p>
 {/if}

@@ -1,7 +1,9 @@
 html {
   height: 100%; /* Ensure full height */
-  overflow: hidden; /* Prevent scrollbars */
+   /* Prevent scrollbars */
   background-color:white;
+  scroll-behavior: smooth;
+  overflow: auto;
   
 }
 nav{
@@ -36,4 +38,5 @@ body::before {
 main{
   height:100%;
   width:100%;
+  margin: 0;
 }
