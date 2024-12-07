@@ -4,6 +4,7 @@ html {
   background-color:white;
   scroll-behavior: smooth;
   overflow: auto;
+  margin:0;
   
 }
 nav{

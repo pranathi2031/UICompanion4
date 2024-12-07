@@ -30,6 +30,7 @@
   // Start displaying the message when the component loads
   import { onMount } from 'svelte';
     import Slide from "./Slide.svelte";
+    import Slide2 from "./Slide2.svelte";
   onMount(() => {
     setTimeout(() => {
       showMessage = true;
@@ -43,17 +44,23 @@
 function handleClick(mood) {
   alert(`You selected: ${mood.label}`);
 }
+let dateValue='';
+let day = new Date().getDate();
+let months =["Jan","Feb","March","April","May","June","July","August","September","October","November","December"];
+let month = months[new Date().getMonth()];
+dateValue = day + " "+month;
+
 </script>
 <main>
 <nav class="navbar">
  <p class="nav-options"><i style="color:white;" class="fas fa-heart"></i>
   Companion</p>
   <div class="nav-right1">
+    <span class="date">{dateValue}</span>
     <button class="nav-button" on:click={chatBot}>
     <i></i>  
     </button>
-    
-  <button class="nav-button">Profile</button>
+    <button class="nav-button">Profile</button>
   </div>
 </nav>
 
@@ -109,23 +116,14 @@ font-weight: bold;
 .navbar {
 display: flex;
 align-items: center;
-
- /* background: linear-gradient(to right, #00d2ff, #3a7bd5);  */
-
- background: linear-gradient(to right, hsl(210, 94%, 44%), hsl(184, 99%, 52%),hsl(210, 94%, 44%));  
- 
-
-
-
-
-
-
-
-
+background: linear-gradient(to right, hsl(210, 94%, 44%), hsl(184, 99%, 52%),hsl(210, 94%, 44%));  
 padding: 10px 20px;
 color:white; /* Text color */
 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 height:70px;
+position:sticky;
+z-index:20000;
+top:0;
 }
 
 /* Styling the navigation options text */
@@ -180,14 +178,10 @@ color:black;
   margin: 5px 0;
 }
 }
-.nav-right{
-  display: flex;
-  margin-left:75%;
-  gap: 10px;
-}
 .nav-right1{
+
   display: flex;
-  margin-left:78%;
+  margin-left:65%;
   gap: 10px;
 
 
@@ -238,6 +232,14 @@ color:black;
       transform: translateY(0);
     }
   }
+  .date {
+  margin-left: 20px; 
+  color: white;
+  font-size: 20px;
+  width:150px;
+  font-weight: bold;
+  margin-top:10px;
+}
 
 
 
