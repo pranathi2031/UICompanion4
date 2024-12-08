@@ -14,3 +14,10 @@
 2.4) Users can track their week wise moods.
 
 2.5) Attempted to implement a chatbot( not fully functional, more work needs to be done).
+
+
+Attached is the link to the documentation and hosted website:
+Github: https://github.com/pranathi2031/UICompanion4.git
+Hosted link: https://4companionui.netlify.app/
+
+
