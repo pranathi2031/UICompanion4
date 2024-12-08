@@ -158,7 +158,7 @@
     border-width: 2px;
   }
   .chat-input button:hover{
-    background-color: #1e90ff;  
+    background-color: #1973ce;  
  
   }
   .close-button {
@@ -169,9 +169,10 @@
     font-weight: bold;
     font-size: 15px;
     border-color:#1e90ff;
+    cursor: pointer;
   }
   .close-button:hover{
-    background-color:  rgb(69, 63, 63);;
+    background-color:#1973ce;
   }
   .connecting-screen {
     position: absolute;

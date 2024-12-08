@@ -1,13 +1,10 @@
 <script>
   import Chatbot from "./Chatbot.svelte";
-  import Counter from "./lib/Counter.svelte";
-  import MoodWheel from "./MoodWheel.svelte";
-  import image from "./lib/chatbot_01_16_bot_chat_robot_app_artificial_chatbot_dialog-1024.webp";
-  import moodImage from "./lib/moods.jpg";
-  import Signin from "./Signin.svelte";
-  let username = "";
+  import { onMount } from 'svelte';
+  import Slide from "./Slide.svelte";
+  import vegaEmbed from 'vega-embed';
+  
   let showMessage= true;
-  let message = "Welcome! How can I help you?";
   let showChatBot = false;
   let showModal = false;
   let flipped = false;
@@ -27,19 +24,22 @@
   function chatBot(){
     showChatBot = !showChatBot;
   }
+  
+  let mood = "happy";  // Default mood value
+
+  // Event handler for receiving the changed value from the child
+  function handleMoodChange(event) {
+    mood = event.detail; // Event detail contains the updated value
+  }
+
+  
   // Start displaying the message when the component loads
-  import { onMount } from 'svelte';
-    import Slide from "./Slide.svelte";
-    import Slide2 from "./Slide2.svelte";
   onMount(() => {
     setTimeout(() => {
       showMessage = true;
-    }, 200000000000); // Delay in milliseconds (500ms here for a slight delay)
+    }, 200000000000); 
+  // Delay in milliseconds (500ms here for a slight delay)
   });
-// Toggle the menu on smaller screens
-
-
-
 
 function handleClick(mood) {
   alert(`You selected: ${mood.label}`);
@@ -49,8 +49,19 @@ let day = new Date().getDate();
 let months =["Jan","Feb","March","April","May","June","July","August","September","October","November","December"];
 let month = months[new Date().getMonth()];
 dateValue = day + " "+month;
+let selectedMood='Happy';
+
+ let isSidePanelVisible = false; // State to control side panel visibility
+ const toggleSidePanel = () => {
+     isSidePanelVisible = !isSidePanelVisible; // Toggle panel visibility
+ };
+//export let updateFeelings;
+
+
+let week = 1;
 
 </script>
+
 <main>
 <nav class="navbar">
  <p class="nav-options"><i style="color:white;" class="fas fa-heart"></i>
@@ -58,9 +69,10 @@ dateValue = day + " "+month;
   <div class="nav-right1">
     <span class="date">{dateValue}</span>
     <button class="nav-button" on:click={chatBot}>
-    <i></i>  
+      <i class="fa-solid fa-comments" style="font-size:25px; color:white;"></i>
     </button>
-    <button class="nav-button">Profile</button>
+    <button class="nav-button" on:click={toggleSidePanel}><i class="fa-solid fa-user" style="font-size: 25px; color:white" ></i>
+    </button>
   </div>
 </nav>
 
@@ -72,11 +84,15 @@ dateValue = day + " "+month;
 {#if showChatBot}
 <Chatbot bind:showChatBot={showChatBot}/>
 {/if}
-<Slide/>
+<Slide bind:selectedMood={selectedMood}
+isSidePanelVisible={isSidePanelVisible}
+toggleVisible={toggleSidePanel}
+ />
 
 
 </main>
 <style>
+
 .screen1{
   position:relative;
   z-index:1;
@@ -119,8 +135,8 @@ align-items: center;
 background: linear-gradient(to right, hsl(210, 94%, 44%), hsl(184, 99%, 52%),hsl(210, 94%, 44%));  
 padding: 10px 20px;
 color:white; /* Text color */
-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-height:70px;
+box-shadow: 0 4px 8px rgba(238, 232, 232, 0.2);
+height:50px;
 position:sticky;
 z-index:20000;
 top:0;
@@ -136,12 +152,11 @@ align-items: center;
 
 /* Styling the buttons */
 .nav-button {
-background-color: white; /* Button color */
+ /* Button color */
+background:none;
 color: black; /* Button text color */
 border: none;
 border-radius: 5px;
-padding: 5px 10px;
-margin: 0 5px;
 cursor: pointer;
 font-size: 1rem;
 transition: background-color 0.3s, transform 0.3s;
@@ -151,13 +166,14 @@ height:40px;
 
 /* Button hover effects */
 .nav-button:hover {
-background-color: rgb(69, 63, 63); /* Darker shade */
 transform: scale(1.05); /* Slightly enlarge button */
+background: none;
+color:azure;
 }
 
 /* Button active state */
 .nav-button:active {
-background-color:grey; /* Even darker shade */
+color:grey; /* Even darker shade */
 transform: scale(1);
 }
 
@@ -181,8 +197,9 @@ color:black;
 .nav-right1{
 
   display: flex;
-  margin-left:65%;
-  gap: 10px;
+  margin-left:74%;
+  gap:15px;
+  
 
 
 }
@@ -233,10 +250,9 @@ color:black;
     }
   }
   .date {
-  margin-left: 20px; 
   color: white;
   font-size: 20px;
-  width:150px;
+  width:120px;
   font-weight: bold;
   margin-top:10px;
 }

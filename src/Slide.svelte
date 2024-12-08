@@ -1,12 +1,13 @@
 <script>
   import { onMount } from "svelte";
-    import App from "./App.svelte";
     import Modal from "./Slide2.svelte";
     import Slide2 from "./Slide2.svelte";
+    import vegaEmbed from 'vega-embed';
+
 
   // Data for mood options and activities
   const moods = ["Happy", "Sad", "Energetic", "Relaxed"];
-  
+
 
   export let activities = {
       Happy: [
@@ -31,10 +32,10 @@
         { name: "Go for a run", img: "run.jpg", time:"30min",location1:true,location2:true,location3:false,location4:false},
       ],
     };
-  
+
   console.log(activities["Happy"].length);
   // State management
-  let selectedMood = "Happy";
+  export let selectedMood;
   let selectedActivity = "";
   let recommendations = [];
   let userRecommendations = [];
@@ -43,7 +44,7 @@
   let value= "";
   let statusBarColor = "gray";
   let statusBarWidth ="";
-  
+
   let currentIndex =0;
   const entries = 3; // Number of cards to show per view
   let isDisabledPrev = true;
@@ -57,7 +58,7 @@ const handleActivitySelect = () => {
     }
   };
 
-  
+
   const addUserRecommendation = () => {
     if (value) {
       userRecommendations = [...userRecommendations, value];
@@ -96,11 +97,51 @@ const handleActivitySelect = () => {
   const element = document.querySelector(target);
   element.scrollIntoView({ behavior: 'smooth' });
 }
+let dateValue='';
+let day = new Date().getDate();
+let months =["Jan","Feb","March","April","May","June","July","August","September","October","November","December"];
+let month = months[new Date().getMonth()];
+dateValue = day + " "+month;
+console.log(new Date());
+
+let moodData = [
+    { date: "1 December", mood: "Happy",week:1},
+    { date: "1 December", mood: "Sad" ,week:1},
+    { date: "1 December", mood: "Energetic",week:1 },
+    { date: "2 December", mood: "Happy",week:1 },
+    { date: "2 December", mood: "Happy",week:1},
+    { date: "2 December", mood: "Sad",week:1 },
+    { date: "3 December", mood: "Calm",week:1 },
+    { date: "3 December", mood: "Happy", week:1 },
+    { date: "4 December", mood: "Sad" ,week:1},
+    { date: "5 December", mood: "Happy",week:1 },
+    { date: "6 December", mood: "Sad" ,week:1},
+    { date: "7 December", mood: "Sad" ,week:1},
+    { date: "8 December", mood: "Sad" ,week:1},
+    {date:dateValue,mood:selectedMood,week:1}
+  ];
+
 function selectMood(mood) {
     selectedMood = mood;
     currentIndex = 0;
+    let newDate = dateValue;
+    let newMood = selectedMood;
+    let newWeek = 1;
+
+    if (newDate && newMood && newWeek) {
+      // Add the new mood entry
+      moodData = [...moodData, { date: newDate, mood: newMood, week:newWeek }];
+
+      // Clear inputs
+      newDate = '';
+      newMood = '';
+
+    }
     updateButtonStates();
+    updateFeelings();
+    console.log(moodData);
   }
+
 
   function getNextRec() {
     const totalActivities = activities[selectedMood]?.length || 0;
@@ -123,13 +164,14 @@ function selectMood(mood) {
     isDisabledNext = currentIndex + entries >= totalActivities;
   }
 
-  
-  
+
+
 
   let showModal = false;
-  
-  
-  
+  let goalCount=[];
+  let totalCount=0;
+  $:console.log(goalCount);
+
 
   let selectedActivity1 = {};
   let goal = "";
@@ -154,7 +196,7 @@ function selectMood(mood) {
   // Function to handle button click
   function toggleLike() {
     liked = !liked;
-    
+
     // Record the interaction (e.g., log it or send it to a server)
     if (liked) {
       console.log('User liked the post');
@@ -191,19 +233,19 @@ function selectMood(mood) {
 
     switch (selectedTimeSpan) {
       case "<30Min":
-        return timeValue < 30;
+        return timeValue <= 30;
       case ">30min<1hr":
-        return (timeValue>=30 && timeValue<60);
+        return (timeValue>=30 && timeValue<=60);
       case ">1hr":
         return timeValue>=60;
       default:
         return true;
     }
   };
-  
+
   const checkLocation = (location) => {
     if (!selectedPlace) return true; // If no time filter is selected, allow all activities
-    
+
     switch (selectedPlace) {
       case "Home":
         return location.location1;
@@ -212,15 +254,127 @@ function selectMood(mood) {
       case "Vehicle":
         return location.location3;
       case "Travel Lounge":
-        return location.location4;    
+        return location.location4;
       default:
         return true;
     }
   };
 
 
+  let isOpen = false;
+  let isOpen1 = false;
+
+  // Function to toggle the dropdown state
+  const toggleDropdown = () => {
+    isOpen = !isOpen;
+  };
+  const toggleDropdown1 = ()=>{
+    isOpen1 = !isOpen1;
+  }
+
+  // Close dropdown if clicking outside
+  const handleClickOutside = (event) => {
+    const dropdown = document.querySelector('.select-box-container')
+    if (!dropdown.contains(event.target)) {
+      isOpen = false;
+    }
+  };
+  const handleClickOutside1 = (event) => {
+    const dropdown = document.querySelector('.select-box-container1')
+    if (!dropdown.contains(event.target)) {
+      isOpen1 = false;
+    }
+  };
+
+  onMount(() => {
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  });
+  onMount(() => {
+    document.addEventListener('click', handleClickOutside1);
+    return () => {
+      document.removeEventListener('click', handleClickOutside1);
+    };
+  });
+
+
   // Watch for changes in the selected mood, time span, or place and apply filters
-  $: selectedMood, selectedTimeSpan, selectedPlace, filterActivities();
+  $: selectedMood, selectedTimeSpan, selectedPlace, filterActivities(),goalCount,totalCount;
+  
+
+  let filteredData =[];
+   function updateChart(week){
+     filteredData=[];
+     for (let i = 0; i < moodData.length; i++) {
+       if (moodData[i].week === week) {
+         filteredData.push(moodData[i]);
+       }
+     }
+     filteredData = filteredData;
+     console.log(filteredData);
+     updateFeelings();
+
+
+
+}
+
+
+function updateFeelings(){
+  let chartSpec = {
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "data": {
+      "values": moodData
+    },
+    "mark": "bar",
+    "encoding": {
+      "x": {
+        "field": "date",
+        "type": "nominal",
+        "axis": { "title": "Date" }
+      },
+      "y": {
+        "aggregate": "count",
+        "field": "mood",
+        "type": "quantitative",
+        "axis": { "title": "Mood Count" }
+      },
+      "color": {
+        "field": "mood",
+        "type": "nominal",
+        "legend": { "title": "Mood" },
+        "scale": {
+          "domain": ["Happy", "Sad", "Energetic", "Calm"],
+        "range": [
+          "#FFA500", // Light blue for "Happy"
+          "#808080", // Dark blue for "Sad"
+          "#FFFF00", // Bright blue for "Energetic"
+          "#ADD8E6"  // Soft blue for "Calm"
+        ]
+        }
+      }
+    }
+  };
+
+  //@ts-ignore
+    vegaEmbed('#chart1', chartSpec);
+}
+let week=1;
+onMount(() => {
+    updateChart(week)
+    updateFeelings();
+
+  });
+  export let isSidePanelVisible;
+  export let toggleVisible;
+  $: if(goalCount){
+    for (let i=0; i<goalCount.length;i++){
+      totalCount = totalCount+goalCount[i]
+    }
+  }
+  $:console.log(goalCount.length);
+  $:console.log(totalCount);
   </script>
 
 <style>
@@ -235,12 +389,12 @@ function selectMood(mood) {
     padding: 1rem;
     margin-bottom: 2rem;
     background: #fff;
-    
+
   }
   #mood-selection{
     margin-left:20px;
   }
-  
+
   h1, h2, h3 {
     color: #333;
   }
@@ -260,7 +414,8 @@ function selectMood(mood) {
     border-width: 3px;
   }
   .btn:hover {
-    background-color:#4b5fc1;
+    background-color:#1e90ff;
+    color:white;
   }
   .error {
     color: red;
@@ -301,11 +456,11 @@ function selectMood(mood) {
     font-size: 15px;
     border-width: 3px;
     font-weight: bolder;
-    
-  
+
+
   }
   .selected:hover{
-    background-color: #1e90ff;
+    background-color: #1b7ad9;
   }
 
   .status-bar-container {
@@ -329,9 +484,9 @@ function selectMood(mood) {
     border: 1px solid #ccc;
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 87%;
-    z-index: 10;
-    left:730px;
+    width: 84%;
+    z-index: 0;
+    left:710px;
     bottom:40px;
     position:relative;
   }
@@ -361,18 +516,13 @@ function selectMood(mood) {
 
 /* Custom arrow for the dropdown */
 /* Select box container with relative positioning */
-.select-box-container {
-  position: relative;
-  width: 200px;
-  margin-bottom: 10px;
-  font-family: Arial, sans-serif;
-}
+/* Container for the custom dropdown */
 
-/* Custom dropdown arrow */
+/* Custom arrow */
 .select-box-container::after {
-  content: '▼'; /* Custom arrow */
+  content: '▼'; /* Default arrow */
   position: absolute;
-  top: 50%;
+  top: 70%;
   right: 10px;
   transform: translateY(-50%);
   pointer-events: none;
@@ -381,21 +531,46 @@ function selectMood(mood) {
   transition: transform 0.3s ease, color 0.3s ease;
 }
 
-/* Rotate arrow when select box or its children are focused */
-.select-box-container:focus-within::after {
-  transform: translateY(-50%) rotate(180deg); /* Rotate arrow upwards */
+/* Change arrow when dropdown is open */
+.select-box-container.open::after {
+  transform: translateY(-70%) rotate(180deg); /* Rotate arrow upwards */
   color: #0056b3;
 }
+
+.select-box-container1{
+  position: relative;
+  width: 200px;
+  margin-bottom: 10px;
+  font-family: Arial, sans-serif;
+}
+.select-box-container1::after {
+  content: '▼'; /* Default arrow */
+  position: absolute;
+  top: 70%;
+  right: 10px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: 16px;
+  color: #007bff;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+/* Change arrow when dropdown is open */
+.select-box-container1.open::after {
+  transform: translateY(-70%) rotate(180deg); /* Rotate arrow upwards */
+  color: #0056b3;
+}
+
 
 /* Style the select box */
 select {
   width: 100%;
   padding: 10px;
-  padding-right: 30px; /* Account for the arrow */
+  padding-right: 30px; /* Space for the arrow */
   border: 2px solid #007bff;
   border-radius: 5px;
   background: #ffffff;
-  appearance: none; /* Hide default browser arrow */
+  appearance: none; /* Remove default browser arrow */
   cursor: pointer;
   font-size: 14px;
   color: #333;
@@ -424,7 +599,6 @@ option:focus {
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
-    
   }
 
   .card {
@@ -448,10 +622,12 @@ option:focus {
     margin-right: 1rem;
     border-radius: 5px;
     background-color: #f0f0f0;
+    cursor:pointer;
   }
 
   .card-content {
     flex-grow: 1;
+    cursor:pointer;
   }
 
   .card h3 {
@@ -462,37 +638,6 @@ option:focus {
   .card p {
     margin: 0.5rem 0;
     font-size: 0.9rem;
-  }
-
-  .card-action .btn {
-    margin-top: 0.5rem;
-    color: white;
-    background-color:#007bff;
-    font-size: 0.9rem;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-
-  .card-action .btn:hover {
-    background-color: #fff4e1;
-  }
-
-  .recommendations {
-    flex: 1;
-    padding: 1rem;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-
-  .recommendations h3 {
-    margin-top: 0;
-  }
-
-  .recommendations ul {
-    padding-left: 1.5rem;
   }
 
   .arrow-button {
@@ -517,7 +662,45 @@ option:focus {
   .unliked {
     color: #444;  /* Default color when not liked */
   }
- 
+
+.side-panel {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 300px;
+    height: 100%;
+    background: #f9f9f9;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+    transition: right 0.3s ease;
+    padding: 20px;
+    overflow-y: auto;
+    z-index:3000000;
+  }
+  .side-panel.open {
+    right: 0;
+  }
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+  }
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+  }
+  .overlay.show {
+    display: block;
+  }
+
 </style>
 
 <section id="mood-selection">
@@ -545,28 +728,30 @@ option:focus {
 <section id="activity-selection">
   <h2>Recommended Activities</h2>
 
-  <div class="select-box-container">
+  <div class="select-box-container {isOpen ? 'open' : ''}"
+  on:click={toggleDropdown}>
     <label>Select your availability: </label>
-  <select id="time-span" bind:value={selectedTimeSpan} on:change={filterActivities} class="select-box">
+  <select id="dropdown" bind:value={selectedTimeSpan} on:change={filterActivities} class="select-box">
     <option value=""> Select...</option>
-    <option value="<30Min"> Less than 30 Minutes</option>
-    <option value=">30min<1hr">More than 30 min and less than an hour</option>
-    <option value=">1hr">More than one hour</option>
+    <option value="<30Min"> 0-30min</option>
+    <option value=">30min<1hr">30min-60min</option>
+    <option value=">1hr">Over 60 min</option>
   </select>
   </div>
-  
-  <div class="select-box-container1">
+
+  <div class="select-box-container1 {isOpen1 ? 'open' : ''}"
+  on:click={toggleDropdown1}>
     <label>Where are you currently:</label>
-  <select id="place" bind:value={selectedPlace} on:change={filterActivities} class="select-box">
+  <select id="dropdown" bind:value={selectedPlace} on:change={filterActivities} class="select-box">
     <option value=""> Select...</option>
     <option value="Home"> Home</option>
     <option value="Office">Office</option>
     <option value="Vehicle">Waiting in a Vehicle</option>
     <option value="Travel Lounge">Travel Lounge</option>
   </select>
-  
+
   </div>
-  
+
 
   {#if selectedMood}
     {#if filteredActivities.length>0}
@@ -580,17 +765,11 @@ option:focus {
             <img src={activity.img} alt={activity} />
           </div>
           <div class="card-content">
-            <button 
-            class={liked ? 'liked' : 'unliked'} 
-            on:click={toggleLike} style="z-index:1000">
-            {liked ? 'Unlike' : 'Like'}
-            
-          </button>
             <h3>{activity.name}</h3>
             <p>Category: {selectedMood}</p>
-            <p>Minimum time:{activity.time}</p>
-            <p>{goal}</p>
-            {#if goal}{/if}
+            <p>Minimum time: {activity.time}</p>
+            
+             <p>{#if goalCount[activity.name]}<p>Goals: {goalCount[activity.name]}</p>{:else}Goals: 0{/if}</p>
           </div>
           <!-- <div class="card-action">
             <button
@@ -602,12 +781,12 @@ option:focus {
               Select
             </button>
           </div>-->
-        </div> 
-      
+        </div>
+
         {/each}
       </div>
       {#if filteredActivities.length>entries}<button class="arrow-button" on:click={getNextRec} disabled={isDisabledNext}>▶</button>{/if}
-    
+
     </div>
     {:else}
     No activities based on your selected choices.
@@ -616,78 +795,25 @@ option:focus {
     <p>Please select a mood first.</p>
   {/if}
 </section>
-
 <Slide2
   show={showModal}
   activity={selectedActivity1}
   onClose={closeModal}
   onAddGoal={addGoal}
+  bind:goal={goalCount}
 />
+<div class="side-panel {isSidePanelVisible ? 'open' : ''}">
+  <button class="close-btn" on:click={toggleVisible}>×</button>
+  <p style="text-align:center; font-size: 20px; font-weight:bold;">My Profile</p>
+  <h3>Username: Sai</h3>
+  <h3>Current Mood: {selectedMood}</h3>
+  <h3>Weekly Mood Tracker: </h3>
+  <div id="chart1"style="width: 100%; height: 300px;"></div>
+  
+  
 
+</div>
 
+<!-- Overlay (optional) -->
+<div class="overlay {isSidePanelVisible ? 'show' : ''}" on:click={toggleVisible}></div>
 
-
-
-
-<!-- {#if selectedActivity}
-<section id="recommendations">
-  <h2>Recommendations for {selectedActivity || "Activity"}</h2>
-  {#if recommendations.length}
-    <ul>
-      {#each recommendations as recommendation}
-        <li>
-          <a href={recommendation.link} target="_blank">{recommendation.text}</a>
-          <span
-            class={recommendation.liked ? "liked" : "like"}
-            on:click={() => toggleLike(recommendation)}>
-            ★
-          </span>
-        </li>
-      {/each}
-    </ul>
-  {/if}
-</section>
-
-<section id="add-recommendation">
-  <h2>Add Your Own Recommendation</h2>
-  <input
-    type="text"
-    placeholder="Add your recommendation"
-    bind:value={value}
-  />
-  <button class="btn" on:click={addUserRecommendation}>Add Recommendation</button>
-  <ul>
-    {#each userRecommendations as rec}
-      <li>{rec}</li>
-    {/each}
-  </ul>
-</section>
-
-<section id="goal-setting">
-  <h2>Set a Goal for {selectedActivity || "Activity"}</h2>
-  <input
-    type="text"
-    placeholder="Enter your goal"
-    bind:value={goal} />
-  <button class="btn" on:click={addGoal}>Add Goal</button>
-  {#if showGoalFeedback}
-    <p class="error">Please enter a goal before adding!</p>
-  {/if}
-  {#if statusMessage}
-    <div class={statusMessage.includes("Completed") ? "success" : ""}>{statusMessage}</div>
-    <div
-      class="status-bar"
-      style="background-color: {statusBarColor}; width:{statusBarWidth}">
-    </div>-->
-    <!-- <div class="status-bar-container"> 
-      <div
-        class="status-bar-fill"
-        style=" background-color:{ statusBarColor} width: {statusBarWidth};">
-      </div>
-    </div>
-    {#if !statusMessage.includes("Completed")}
-      <button class="btn" on:click={() => markCompleted(goal)}>Mark as Completed</button>
-    {/if}
-  {/if}
-</section>
-{/if} --> 
