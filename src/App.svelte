@@ -3,6 +3,7 @@
   import { onMount } from 'svelte';
   import Slide from "./Slide.svelte";
   import vegaEmbed from 'vega-embed';
+    import Footer from "./Footer.svelte";
   
   let showMessage= true;
   let showChatBot = false;
@@ -89,7 +90,7 @@ isSidePanelVisible={isSidePanelVisible}
 toggleVisible={toggleSidePanel}
  />
 
-
+<Footer/>
 </main>
 <style>
 
