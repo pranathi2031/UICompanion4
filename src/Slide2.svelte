@@ -23,7 +23,17 @@
 
     // Predefined goal ideas
     let  goalIdeas = [
-      {name:'Go for a walk',goal:'Watch EndGame'}
+      {name:'Cook',goal:'Bake some cookies'},
+      {name:'Cook',goal:'Make pasta'},
+      {name:'Start a new hobby',goal:'Paint'},
+      {name:'Start a new hobby',goal:'Click some pictures'},
+      {name:'Do a fast dance',goal:'Dance for a bollywood song'},
+      {name:'Do a fast dance',goal:'Dance for a mashup'}
+      
+      
+      
+      
+      
       
     ];
 
@@ -112,7 +122,7 @@
     <div class="modal-overlay" on:click={onClose}>
       <div class="modal" on:click|stopPropagation>
         <h2>{activity.name}</h2>
-        <p>Minimum time: {activity.time}</p>
+        <p style="font-weight:bold;">Minimum time: {activity.time}</p>
         <h3>Set a Goal</h3>
         <!-- <input
           type="text"
@@ -153,7 +163,7 @@
                 
                 <div>
                     {#if goal.status === GOAL_STATUS.NOT_STARTED}
-                        <button class="normalButton"on:click={() => startProgress(index)}>Start Progress</button>
+                        <button class="normalButton"on:click={() => startProgress(index)}>Start</button>
                     {/if}
                     {#if goal.status === GOAL_STATUS.IN_PROGRESS}
                         <button class="normalButton"on:click={() => completeGoal(index)}>Complete</button>
@@ -198,6 +208,7 @@
     .modal {
       background: #fff;
       padding: 1.5rem;
+      padding-top:1rem;
       border-radius: 10px;
       max-width: 400px;
       width: 90%;
