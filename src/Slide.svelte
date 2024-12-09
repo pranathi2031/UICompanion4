@@ -217,6 +217,7 @@ function selectMood(mood) {
       }
     }
     filteredActivities=filteredActivities;
+    console.log(filteredActivities);
  }
  console.log(filteredActivities);
   // Helper function to check if the activity time matches the selected time span
@@ -255,7 +256,7 @@ function selectMood(mood) {
     }
   };
   function getNextRec() {
-    const totalActivities = activities[selectedMood]?.length || 0;
+    const totalActivities = filteredActivities?.length || 0;
     if (currentIndex + entries < totalActivities) {
       currentIndex += entries;
     }
@@ -270,7 +271,7 @@ function selectMood(mood) {
   }
 
   function updateButtonStates() {
-    const totalActivities = activities[selectedMood]?.length || 0;
+    const totalActivities = filteredActivities?.length || 0;
     isDisabledPrev = currentIndex <= 0;
     isDisabledNext = currentIndex + entries >= totalActivities;
   }
