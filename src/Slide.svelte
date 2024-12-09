@@ -504,7 +504,7 @@ onMount(() => {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     width: 84%;
     z-index: 0;
-    left:710px;
+    left:708px;
     bottom:40px;
     position:relative;
   }
@@ -722,7 +722,7 @@ option:focus {
 </style>
 
 <section id="mood-selection">
-  <h2>Select Your Mood</h2>
+  <h2 style="margin-left:20px;">Select Your Mood</h2> 
   <div>
     {#each moods as mood}
       <button class={selectedMood===mood? "selected":"btn"} on:click={() => {
