@@ -228,12 +228,12 @@ function selectMood(mood) {
     console.log(timeValue);
 
     switch (selectedTimeSpan) {
-      case "<30Min":
-        return timeValue <= 30;
-      case ">30min<1hr":
-        return (timeValue>=30 && timeValue<=60);
-      case ">1hr":
-        return timeValue>=60;
+      case "<10Min":
+        return timeValue <= 10;
+      case ">10<30":
+        return (timeValue<=30);
+      case ">30<60":
+        return (timeValue<=60);
       default:
         return true;
     }
@@ -751,9 +751,9 @@ option:focus {
     <label>Select your availability: </label>
   <select id="dropdown" bind:value={selectedTimeSpan} on:change={filterActivities} class="select-box">
     <option value=""> Select...</option>
-    <option value="<30Min"> 0-30min</option>
-    <option value=">30min<1hr">30min-60min</option>
-    <option value=">1hr">Over 60 min</option>
+    <option value="<10Min"> 0-10min</option>
+    <option value=">10<30">10min-30min</option>
+    <option value=">30<60">30min-60min</option>
   </select>
   </div>
 
