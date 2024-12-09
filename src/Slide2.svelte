@@ -28,7 +28,49 @@
       {name:'Start a new hobby',goal:'Paint'},
       {name:'Start a new hobby',goal:'Click some pictures'},
       {name:'Do a fast dance',goal:'Dance for a bollywood song'},
-      {name:'Do a fast dance',goal:'Dance for a mashup'}
+      {name:'Do a fast dance',goal:'Dance for a mashup'},
+      {name:'Sing a song',goal:'Sing Pushpa2 songs'},
+      {name:'Read a book',goal:'Read a mystery book'},
+      {name:'Read a book',goal:'Read a romcom'},
+      {name:'Play your favourite instrument',goal:'Play your fav song'},
+      {name:'Watch a movie',goal:'Watch marvel movie'},
+      {name: 'Watch a funny movie',goal:'Watch BabyBoss'},
+      {name: 'Enjoy Dessert',goal:'Try Cookie&Cream flavour'},
+      {name:'Recall any happy moment',goal:'Recall family time'},
+      {name:'Write your journal',goal:'Write about your feelings'},
+      {name: 'Sing aloud',goal:'Sing aloud for 10 min'},
+      {name:'Take a walk',goal:'Walk for 30 min'},
+      {name:'Talk to an old friend',goal:'Talk for atleast 5min'},
+      {name:'Read a good book',goal:'Read a thriller romcom'},
+      {name:'Watch a funny romcom',goal:'Watch Pretty Woman'},
+      {name:'Work in the garden',goal:'Water Plants'},
+      {name:'Watch some baby videos',goal:'Watch 2 videos'},
+      {name:'Write a journal',goal:'List your happy moments'},
+      {name:'Do some cleaning',goal:'Clean your kitchen'},
+      {name:'Sing loudly',goal:'Sing a pop song'},
+      {name:'Listen to a podcast',goal:'Listen a funny podcast'},
+      {name:'Walk in the park',goal:'Enjoy nature walk'},
+      {name:'Play with your pet',goal:'Play ball'},
+      {name:'Do some hip-hop',goal:'Dance with passion'},
+      {name:'Stretch your body',goal:'Do some stretches'},
+      {name:'Write in your journal',goal:'Write about your anger'},
+      {name:'Go for a jog',goal:'Jog for 5min'},
+      {name:'Attend a kickboxing session',goal:'Kickbox for 30min'},
+      {name:'Do pushups',goal:'Do 10 pushups'},
+      {name:'Take deep breaths',goal:'Breathe in breathe out'},
+      {name:'Listen to your fav song',goal:'Enjoy the song'},
+      {name:'Book for a spa session',goal:'Relax and Enjoy'},
+      {name:'Go for a walk or jog',goal:'Brisk walk for 30 min'},
+      {name:'Meditate',goal:'Do pranayama'},
+      {name:'Go to a park',goal:'Take some nature pics'},
+      {name:'Run',goal:'Run for a mile'},
+      {name:'Do jumping jacks',goal:'Jump actively'},
+      {name:'Clean your room',goal:'Organise your wardrobe'},
+      {name:'Go to gym',goal:'Work with weights'},
+      {name:'Cook something',goal:'Make Chicken Curry'},
+      {name:'Cook something',goal:'Make Biryani'}
+      
+    
       
       
       
@@ -147,6 +189,7 @@
                 <button class="normalButton"on:click={() => {updateList(idea.goal) }}>ADD "{idea.goal.toUpperCase()}"</button>
             </li><br>
             {/if}
+
         {/each}
     </ul>
 
